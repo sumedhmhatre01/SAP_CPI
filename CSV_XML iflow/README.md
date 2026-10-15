@@ -16,10 +16,6 @@ EmployeeID,Name,Department
 104,Neha,IT
 ```
 
-## iFlow Diagram
-
-![SAP CPI CSV to XML iFlow](images/csv-xml-iflow.png)
-
 ## iFlow Steps
 
 1. **Start Timer 1:** Starts the integration process based on the configured timer schedule.
