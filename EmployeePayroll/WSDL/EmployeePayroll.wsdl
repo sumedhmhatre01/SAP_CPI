@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:src="urn:employee:source"
+    xmlns:tgt="urn:payroll:target"
+    xmlns:tns="urn:payroll:service"
+    targetNamespace="urn:payroll:service"
+    name="EmployeePayrollService">
+
+    <wsdl:types>
+        <xs:schema targetNamespace="urn:employee:source"
+                   elementFormDefault="qualified">
+            <xs:element name="Employee">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="EmpID" type="xs:string"/>
+                        <xs:element name="FirstName" type="xs:string"/>
+                        <xs:element name="LastName" type="xs:string"/>
+                        <xs:element name="BasicSalary" type="xs:decimal"/>
+                        <xs:element name="HRA" type="xs:decimal" minOccurs="0"/>
+                        <xs:element name="Allowance" type="xs:decimal" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+
+        <xs:schema targetNamespace="urn:payroll:target"
+                   elementFormDefault="qualified">
+            <xs:element name="PayrollEmployee">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="EmployeeNumber" type="xs:string"/>
+                        <xs:element name="FullName" type="xs:string"/>
+                        <xs:element name="SalaryDetails">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="Basic" type="xs:decimal"/>
+                                    <xs:element name="HousingAllowance" type="xs:decimal"/>
+                                    <xs:element name="OtherAllowance" type="xs:decimal"/>
+                                    <xs:element name="GrossSalary" type="xs:decimal"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="EmployeeRequest">
+        <wsdl:part name="parameters" element="src:Employee"/>
+    </wsdl:message>
+
+    <wsdl:message name="PayrollEmployeeResponse">
+        <wsdl:part name="parameters" element="tgt:PayrollEmployee"/>
+    </wsdl:message>
+
+    <wsdl:portType name="EmployeePayrollPortType">
+        <wsdl:operation name="processEmployee">
+            <wsdl:input message="tns:EmployeeRequest"/>
+            <wsdl:output message="tns:PayrollEmployeeResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="EmployeePayrollSoapBinding"
+                  type="tns:EmployeePayrollPortType">
+        <soap:binding style="document"
+                      transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="processEmployee">
+            <soap:operation soapAction="processEmployee"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="EmployeePayrollService">
+        <wsdl:port name="EmployeePayrollPort"
+                   binding="tns:EmployeePayrollSoapBinding">
+            <soap:address location="https://example.com/payroll"/>
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>
